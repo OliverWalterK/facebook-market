@@ -1,17 +1,17 @@
 from sqlalchemy import create_engine
 from PIL import Image
-import os
+import os, creds
 
 path = "images/"
 dirs = os.listdir(path)
 
 def connect_to_db():
-    host = 'products.c8k7he1p0ynz.us-east-1.rds.amazonaws.com'
-    password = 'aicore2022!'
-    port = 5432
-    user = 'postgres'
-    database = 'postgres'
-    api_type = 'psycopg2'
+    host = creds.host
+    password = creds.password
+    port = creds.port
+    user = creds.user
+    database = creds.database
+    api_type = creds.api_type
     engine = create_engine(f'postgresql+{api_type}://{user}:{password}@{host}:{port}/{database}')
     engine.connect()
     return engine
