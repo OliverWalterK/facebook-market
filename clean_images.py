@@ -1,20 +1,5 @@
-from sqlalchemy import create_engine
 from PIL import Image
-import os, creds
-
-path = "images/"
-dirs = os.listdir(path)
-
-def connect_to_db():
-    host = creds.host
-    password = creds.password
-    port = creds.port
-    user = creds.user
-    database = creds.database
-    api_type = creds.api_type
-    engine = create_engine(f'postgresql+{api_type}://{user}:{password}@{host}:{port}/{database}')
-    engine.connect()
-    return engine
+import os
 
 ## This code will find out what the smallest resolution is from all the images.
 def minimum_dimensions():
@@ -31,6 +16,7 @@ def minimum_dimensions():
     print(min_width)
     print(min_height)
 
+## This will resize the image to dimensions X with black bars
 def resize_image(final_size, im):
     size = im.size
     ratio = float(final_size) / max(size)
@@ -41,10 +27,11 @@ def resize_image(final_size, im):
     return new_im
 
 if __name__ == '__main__':
+    path = "images/"
+    dirs = os.listdir(path)
     final_size = 512
-    for n, item in enumerate(dirs[:5], 1):
-        im = Image.open('images/' + item)
-        if im.mode != 'RGB':
-            im.mode = 'RGB'
-        new_im = resize_image(final_size, im)
-        new_im.save(f'{n}_resized.jpg')
+    for n, item in enumerate(dirs, 1):
+        if item.endswith('jpg'):
+            im = Image.open('images/' + item)
+            new_im = resize_image(final_size, im)
+            new_im.save(f'./resized_images/{n}_resized.jpg')
